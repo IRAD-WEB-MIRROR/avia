@@ -1,0 +1,34 @@
+{
+  "season": {
+    "id": "W26",
+    "from": "2026-10-25",
+    "to": "2027-03-27",
+    "name": {"en": "Winter 2026/27", "ir": "Kısh 2026/27", "ru": "Зима 2026/27"}
+  },
+  "airports": {
+    "TLS": {"name": {"en": "Talas", "ir": "Talas", "ru": "Талас"}, "utc": 6, "wx": "talas"},
+    "TKM": {"name": {"en": "Tash-Kömür", "ir": "Tash-Kömür", "ru": "Таш-Кумыр"}, "utc": 6, "wx": "tash-komur"},
+    "ALA": {"name": {"en": "Almaty", "ir": "Almatı", "ru": "Алматы"}, "utc": 5},
+    "TAS": {"name": {"en": "Tashkent", "ir": "Tashkent", "ru": "Ташкент"}, "utc": 5},
+    "IST": {"name": {"en": "Istanbul", "ir": "Stambul", "ru": "Стамбул"}, "utc": 3},
+    "DXB": {"name": {"en": "Dubai", "ir": "Dubay", "ru": "Дубай"}, "utc": 4}
+  },
+  "aircraft": {
+    "AT7": {"en": "ATR 72-500", "ir": "ATR 72-500", "ru": "ATR 72-500"},
+    "E90": {"en": "Embraer 190", "ir": "Embraer 190", "ru": "Embraer 190"}
+  },
+  "flights": [
+    {"no": "IRD 301", "from": "TLS", "to": "TKM", "dep": "08:20", "arr": "09:20", "days": "246", "daily": ["12-01", "03-15"], "ac": "AT7", "kind": "dom", "counters": "1-2", "exit": "2"},
+    {"no": "IRD 302", "from": "TKM", "to": "TLS", "dep": "10:00", "arr": "11:00", "days": "246", "daily": ["12-01", "03-15"], "ac": "AT7", "kind": "dom", "after": "IRD 301", "turn": 40},
+    {"no": "IRD 731", "from": "TLS", "to": "ALA", "dep": "07:30", "arr": "08:00", "days": "36", "ac": "AT7", "kind": "int", "counters": "3-4", "exit": "1"},
+    {"no": "IRD 732", "from": "ALA", "to": "TLS", "dep": "09:20", "arr": "11:50", "days": "36", "ac": "AT7", "kind": "int", "after": "IRD 731", "turn": 50},
+    {"no": "IRD 741", "from": "TLS", "to": "TAS", "dep": "13:10", "arr": "13:20", "days": "4", "ac": "AT7", "kind": "int", "counters": "3-4", "exit": "1", "permit": true},
+    {"no": "IRD 742", "from": "TAS", "to": "TLS", "dep": "14:30", "arr": "16:40", "days": "4", "ac": "AT7", "kind": "int", "after": "IRD 741", "turn": 50},
+    {"no": "IRD 721", "from": "TLS", "to": "DXB", "dep": "07:00", "arr": "09:15", "days": "1", "ac": "E90", "kind": "int", "counters": "3-4", "exit": "1"},
+    {"no": "IRD 722", "from": "DXB", "to": "TLS", "dep": "11:00", "arr": "17:15", "days": "1", "ac": "E90", "kind": "int", "after": "IRD 721", "turn": 60},
+    {"no": "IRD 711", "from": "TLS", "to": "IST", "dep": "06:30", "arr": "10:00", "days": "5", "ac": "E90", "kind": "int", "counters": "3-4", "exit": "1", "tech": {"en": "technical stop at Baku, no passengers boarding", "ir": "Bakuda tekhnikalık konuu, jolovchu otturulbayt", "ru": "техническая посадка в Баку без посадки пассажиров"}},
+    {"no": "IRD 712", "from": "IST", "to": "TLS", "dep": "11:30", "arr": "21:00", "days": "5", "ac": "E90", "kind": "int", "after": "IRD 711", "turn": 60, "tech": {"en": "technical stop at Baku", "ir": "Bakuda tekhnikalık konuu", "ru": "техническая посадка в Баку"}},
+    {"no": "IRD 9301", "from": "TLS", "to": "TKM", "dep": "12:30", "arr": "13:30", "days": "1", "ac": "AT7", "kind": "closed", "counters": "5", "exit": "3"},
+    {"no": "IRD 9302", "from": "TKM", "to": "TLS", "dep": "14:15", "arr": "15:15", "days": "1", "ac": "AT7", "kind": "closed", "after": "IRD 9301", "turn": 40}
+  ]
+}
