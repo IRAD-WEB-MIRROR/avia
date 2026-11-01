@@ -1,0 +1,30 @@
+/* leadership, contacts, news, documents, vacancies and FAQ pages */
+.kit-head { margin-bottom: 10px; }
+.kit-post { color: var(--muted, #666); margin: -4px 0 14px; }
+.kit-thumb { float: right; width: 72px; height: auto; margin: 0 0 8px 12px; border: 1px solid var(--line, #ddd); }
+.kit-year { margin: 30px 0 6px; font-size: 1.2rem; border-bottom: 2px solid var(--blue, #2b4c7e); padding-bottom: 4px; }
+.kit-faq { background: #fff; border: 1px solid var(--line, #ddd); margin: 0 0 8px; }
+.kit-faq summary { cursor: pointer; padding: 12px 16px; font-weight: 600; }
+.kit-faq[open] summary { border-bottom: 1px solid var(--line, #ddd); }
+.kit-faq > div { padding: 4px 16px 6px; }
+.kit-phones td { padding: 6px 4px; }
+.kit-vac.is-closed { opacity: .65; }
+.kit-fulldoc .body p { max-width: 780px; }
+.kit-home { margin-top: 10px; padding-bottom: 10px; }
+.kit-home .plist .s { display: none; }
+.nw { white-space: nowrap; }
+
+/* the site's own sheet has no state-site classes; plain fallbacks */
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+.crumbs { font-size: .85rem; margin: 12px 0; } .lead { font-size: 1.08rem; }
+.grid { display: grid; gap: 18px; } .g-2 { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.g-main { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); } @media (max-width: 760px) { .g-main { grid-template-columns: minmax(0, 1fr); } }
+.card, .dept, .doc, .release { background: #fff; border: 1px solid #ccc; padding: 14px 16px; margin-bottom: 12px; }
+.doc header { border-bottom: 1px solid #ddd; margin-bottom: 8px; } .doc .no, .plist .meta, .release .meta, .small, .muted { font-size: .85rem; color: #666; }
+.plist { list-style: none; padding: 0; } .plist li { border-bottom: 1px solid #ddd; padding: 10px 0; } .plist .t { font-weight: 600; }
+.person { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 20px; } @media (max-width: 680px) { .person { grid-template-columns: minmax(0, 1fr); } }
+.portrait-photo img { width: 100%; height: auto; } .portrait { background: #eee; padding: 16px; text-align: center; }
+.kv { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 4px 12px; } .kv dd { margin: 0; }
+.tag { font-size: .72rem; text-transform: uppercase; background: #e8eef7; padding: 2px 6px; }
+table.data { border-collapse: collapse; width: 100%; } table.data td, table.data th { border-bottom: 1px solid #ddd; padding: 6px; text-align: left; }
+.sect-h { border-bottom: 2px solid #446; margin: 26px 0 12px; display: flex; justify-content: space-between; align-items: baseline; } .sect-h h2 { margin: 0; }

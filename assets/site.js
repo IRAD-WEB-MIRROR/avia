@@ -3,7 +3,7 @@
   "use strict";
   var SITE = {
     store: "avia_lang",
-    nav: [["home", "/"], ["schedule", "/schedule.html"], ["passengers", "/passengers.html"], ["about", "/about.html"], ["contacts", "/about.html#contacts"]],
+    nav: [["home", "/"], ["schedule", "/schedule.html"], ["passengers", "/passengers.html"], ["about", "/about.html"], ["news", "/news.html"], ["contacts", "/contacts.html"]],
     links: [["gov", "https://iradgov.org/"], ["eirad", "https://e-irad.org/"], ["railways", "https://railways.iradgov.org/"], ["customs", "https://customs.iradgov.org/"], ["gidromet", "https://gidromet.iradgov.org/"], ["jandarm", "https://jandarm.iradgov.org/"], ["post", "https://post.iradgov.org/"], ["bank", "https://bank.iradgov.org/"], ["stats", "https://stats.iradgov.org/"], ["mejlis", "https://mejlis.iradgov.org/"], ["court", "https://court.iradgov.org/"], ["elections", "https://elections.iradgov.org/"], ["arch", "https://archives.iradgov.org/"], ["loto", "https://loto.iradgov.org/"], ["talas", "https://talas.iradgov.org/"], ["nurzhan", "https://nurzhan.iradgov.org/"], ["iyikjanyl", "https://iyikjanyl.iradgov.org/"], ["heritage", "https://heritage.iradgov.org/"]],
     clocks: [["cTalas", 6], ["cAlmaty", 5], ["cDubai", 4], ["cIstanbul", 3], ["cUtc", 0]],
     tel: "+996-39-2-29-10-01"
@@ -98,6 +98,7 @@
       side.innerHTML =
         '<div class="box"><h4 class="o">' + esc(t("helpH")) + '</h4><div class="in"><span class="tel">' + esc(SITE.tel) + '</span><br><span class="small muted">' + esc(t("helpHrs")) + "</span></div></div>" +
         '<div class="box"><h4>' + esc(t("sideP")) + "</h4>" + sideLinks([["/#board", "sBoard"], ["/schedule.html", "nav_schedule"], ["/passengers.html#road", "sRoad"], ["/passengers.html#checkin", "sideCk"], ["/passengers.html#baggage", "sBaggage"], ["/passengers.html#services", "sServices"], ["/passengers.html#tickets", "sTickets"]]) + "</div>" +
+        '<div class="box"><h4>' + esc(t("kit_nav")) + "</h4>" + sideLinks([["/leadership.html", "kit_nav_leadership"], ["/contacts.html", "kit_nav_contacts"], ["/news.html", "kit_nav_news"], ["/documents.html", "kit_nav_documents"], ["/vacancies.html", "kit_nav_vacancies"], ["/faq.html", "kit_nav_faq"]]) + "</div>" +
         '<div class="box"><h4>' + esc(t("wxH")) + '</h4><div class="in" id="wxBox"><span class="muted small">' + esc(t("loading")) + "</span></div></div>" +
         '<div class="box poll"><h4>' + esc(t("pollH")) + '</h4><div class="in" id="poll"></div></div>' +
         '<div class="box links"><h4>' + esc(t("linksH")) + "</h4><ul>" + SITE.links.map(function (l) { return '<li><a href="' + l[1] + '">' + esc(t("link_" + l[0])) + "</a></li>"; }).join("") + "</ul></div>";
@@ -320,6 +321,7 @@
   function render() {
     if (store("avia_vi") === "1") document.body.classList.add("big");
     chrome();
+    document.querySelectorAll("[data-date]").forEach(function (el) { var d = el.getAttribute("data-date"); if (/^\d{4}-\d\d-\d\d$/.test(d)) el.textContent = fmtDate(d); });
     staticText();
     notices();
     flights();
