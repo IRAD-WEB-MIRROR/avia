@@ -4,7 +4,7 @@
   var SITE = {
     store: "avia_lang",
     nav: [["home", "/"], ["schedule", "/schedule.html"], ["passengers", "/passengers.html"], ["about", "/about.html"], ["contacts", "/about.html#contacts"]],
-    links: [["gov", "https://iradgov.org/"], ["eirad", "https://e-irad.org/"], ["railways", "https://railways.iradgov.org/"], ["customs", "https://customs.iradgov.org/"], ["gidromet", "https://gidromet.iradgov.org/"], ["jandarm", "https://jandarm.iradgov.org/"], ["post", "https://post.iradgov.org/"], ["bank", "https://bank.iradgov.org/"], ["stats", "https://stats.iradgov.org/"], ["mejlis", "https://mejlis.iradgov.org/"], ["court", "https://court.iradgov.org/"], ["elections", "https://elections.iradgov.org/"], ["arch", "https://archives.iradgov.org/"], ["loto", "https://loto.iradgov.org/"]],
+    links: [["gov", "https://iradgov.org/"], ["eirad", "https://e-irad.org/"], ["railways", "https://railways.iradgov.org/"], ["customs", "https://customs.iradgov.org/"], ["gidromet", "https://gidromet.iradgov.org/"], ["jandarm", "https://jandarm.iradgov.org/"], ["post", "https://post.iradgov.org/"], ["bank", "https://bank.iradgov.org/"], ["stats", "https://stats.iradgov.org/"], ["mejlis", "https://mejlis.iradgov.org/"], ["court", "https://court.iradgov.org/"], ["elections", "https://elections.iradgov.org/"], ["arch", "https://archives.iradgov.org/"], ["loto", "https://loto.iradgov.org/"], ["talas", "https://talas.iradgov.org/"], ["nurzhan", "https://nurzhan.iradgov.org/"], ["iyikjanyl", "https://iyikjanyl.iradgov.org/"], ["heritage", "https://heritage.iradgov.org/"]],
     clocks: [["cTalas", 6], ["cAlmaty", 5], ["cDubai", 4], ["cIstanbul", 3], ["cUtc", 0]],
     tel: "+996-39-2-29-10-01"
   };
