@@ -179,7 +179,7 @@
    "kit_nav": "Terminal",
    "kh1": "Tüshtük perrondogu ishter, 3–7-noyabr",
    "kh2": "Kıshkı raspisaniye küchünö kirdi",
-   "kh3": "Janıl mayramına Tash-Kömürgö kosumcha reysler"
+   "kh3": "Janyl mayramına Tash-Kömürgö koshumcha reysler"
   },
   "ru": {
    "kit_home": "Главная",
