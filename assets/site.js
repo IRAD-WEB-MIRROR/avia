@@ -171,6 +171,11 @@
     if (c === 65 || c === 82) return { min: 10 + Math.round(r * 10), why: "rain" };
     return null;
   }
+  function airInc(W, d) {
+    return (W && W.incidents && W.incidents.list || []).filter(function (x) {
+      return x.air && x.start.slice(0, 10) <= d && (!x.end || d <= x.end.slice(0, 10));
+    });
+  }
   function flightState(f, d, S, W, memo) {
     var key = f.no + d; if (memo[key]) return memo[key];
     var r = h01(d + "|" + f.no), r2 = h01(f.no + "/" + d), r3 = h01("w" + f.no + d), D = 0, res = { min: 0 };
@@ -181,6 +186,18 @@
       if (e.cancel) res.cancel = true;
       if (e.min && e.min > D) { D = e.min; res.why = e.why; }
       if (i === 1 && place === "talas" && e.why === "fog" && r3 < 0.3) res.diverted = true;
+    });
+    /* incidents in today's numbers (fog hold, snowstorm, thunderstorm at Talas): the same window on every site */
+    airInc(W, d).forEach(function (x) {
+      var a = x.air, from = m(a.from), to = m(a.to), r4 = h01("i" + f.no + d);
+      if (a.airports.indexOf(f.from) < 0 && a.airports.indexOf(f.to) < 0) return;
+      var at = f.from === "TLS" ? m(f.dep) : m(f.arr);
+      if (x.start.slice(0, 10) === d && at < from - 30) return;           /* gone before it began */
+      if ((!x.end || x.end.slice(0, 10) === d) && at > to) return;       /* after it is over */
+      if (a.action === "cancel_dom" && dom) { res.cancel = true; res.why = "snow"; return; }
+      var need = a.action === "hold" ? Math.max(0, to - at) + 15 + Math.round(r4 * 25) : Math.round((a.delay_min || 40) * (0.5 + 0.5 * r4));
+      if (need > D) { D = need; res.why = a.action === "hold" ? "fog" : x.kind === "thunderstorm" ? "storm" : "snow"; }
+      if (a.action === "hold" && f.to === "TLS" && r4 < 0.3) res.diverted = true;
     });
     if (f.permit && h01("permit|" + d) < 0.22) res.postponed = true;
     if (f.after) {
@@ -250,6 +267,14 @@
     el.innerHTML = '<div class="tabs" role="tablist"><button type="button" role="tab" data-mode="dep" aria-selected="' + dep + '"><svg viewBox="0 0 24 24"><path d="M2.5 19h19v2h-19zm19.6-9.4c-.2-.8-1-1.3-1.8-1.1L14.9 10 8 3.6l-1.9.5 4.1 7.2-5 1.3-2-1.5-1.5.4 2.6 4.5 16.8-4.5c.8-.2 1.3-1.1 1-1.9z"/></svg>' + esc(t("tabDep")) +
       '</button><button type="button" role="tab" data-mode="arr" aria-selected="' + !dep + '"><svg viewBox="0 0 24 24"><path d="M2.5 19h19v2h-19zm7.2-5.2l4.3 1.2 5.3 1.4c.8.2 1.6-.3 1.8-1.1.2-.8-.3-1.6-1.1-1.8l-5.3-1.4-2.8-9.1-1.9-.5v8.3l-5-1.3-.9-2.3-1.5-.4v5.2z"/></svg>' + esc(t("tabArr")) +
       '</button><span class="upd">' + esc(t("updated", { t: hm(now) })) + "</span></div>" +
+      (function () {   /* the incident behind the delays, once, dated */
+        var seen = {};
+        return [today, tom].map(function (d) {
+          return airInc(W, d).filter(function (x) { var ok = !seen[x.id] && x.lines && x.lines.air && (!x.end || Date.parse(x.end) > Date.now()); seen[x.id] = 1; return ok; }).map(function (x) {
+            return '<p class="board-note"><b>⚠ ' + esc(fmtDate(d)) + ": " + esc(tri(x.lines.air)) + "</b></p>";
+          }).join("");
+        }).join("");
+      })() +
       '<div class="tbl-wrap"><table class="board">' + head + "<tbody>" + body + "</tbody></table></div>";
     $$("[data-mode]", el).forEach(function (bt) { bt.addEventListener("click", function () { boardMode = bt.getAttribute("data-mode"); board(S, W); }); });
   }
