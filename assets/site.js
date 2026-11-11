@@ -247,6 +247,99 @@
       (f.kind === "closed" ? '<span class="via">' + esc(t("closedNote")) + "</span>" : f.tech ? '<span class="via">' + esc(tri(f.tech)) + "</span>" : "") + '</td><td class="tm">' + f.arr + '</td><td class="tm">' + (isToday && st.min && !st.cancel && !st.postponed ? hm(at) : "") +
       '</td><td class="h-ck"></td><td class="h-ex"></td><td class="st ' + cls + '">' + esc(s) + "</td></tr>";
   }
+  /* station mode: the board as a full-screen split-flap display (the screens in the terminal hall); #fids opens it */
+  function flipRows(el, rows, widths) {
+    var prev = el._prev || [];
+    var fit = function (c, w) { var x = String(c == null ? "" : c).toUpperCase(); if (x.length > w) x = x.slice(0, w); while (x.length < w) x += " "; return x; };
+    var html = rows.map(function (r, i) {
+      return '<div class="fr' + (r.cls ? " " + r.cls : "") + '">' + r.cells.map(function (c, j) {
+        var txt = fit(c, widths[j]), old = (prev[i] && prev[i][j]) || "", out = "";
+        for (var k = 0; k < txt.length; k++) {
+          var ch = txt.charAt(k), flip = old.charAt(k) !== ch;
+          out += '<span class="ch' + (flip ? " fl" : "") + '"' + (flip ? ' style="animation-delay:' + (k * 22 + j * 40 + Math.floor(Math.random() * 60)) + 'ms"' : "") + ">" + (ch === " " ? "&nbsp;" : esc(ch)) + "</span>";
+        }
+        return '<span class="fc c' + j + '">' + out + "</span>";
+      }).join("") + "</div>";
+    }).join("");
+    el._prev = rows.map(function (r) { return r.cells.map(function (c, j) { return fit(c, widths[j]); }); });
+    return html;
+  }
+  var fidsMode = "dep", fidsTimer = null;
+  function fidsRem(f, st, now, isToday, dep, S) {
+    var at = m(dep ? f.dep : f.arr) + st.min;
+    if (st.cancel) return [t("fCanc"), "bad"];
+    if (st.postponed) return [t("fPost"), "bad"];
+    if (!isToday) return [t("fTmw"), ""];
+    if (dep) {
+      var open = m(f.dep) - (f.kind === "int" ? 150 : f.kind === "closed" ? 60 : 90), close = at - (f.kind === "int" ? 50 : 30);
+      if (now >= at) return [t("fDep", { t: hm(at) }), "dim"];
+      if (now >= at - 10) return [t("fGate"), ""];
+      if (now >= at - 35) return [t("fBoard", { x: f.exit || "" }), "go"];
+      if (now >= close) return [t("fCkClosed"), ""];
+      if (now >= open && f.kind !== "closed") return [t("fCk", { c: f.counters || "" }), "ok"];
+      return st.min ? [t("fDelayed"), "warn"] : [t("fOnTime"), ""];
+    }
+    var depIrad = m(f.dep) + (6 - S.airports[f.from].utc) * 60 + st.min;
+    if (now >= at) return st.diverted ? [t("fDiv"), "bad"] : [t("fLanded", { t: hm(at) }), "ok"];
+    if (now >= depIrad) return [t("fAir"), "go"];
+    return st.min ? [t("fDelayed"), "warn"] : [t("fOnTime"), ""];
+  }
+  function fids(S, W) {
+    var ov = $("#fids");
+    if (!ov) {
+      ov = document.createElement("div"); ov.id = "fids"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-label", t("fidsBtn"));
+      ov.innerHTML = '<div class="fids-head"><img src="/assets/logo-mark.svg" alt="" width="40" height="40"><span class="fids-name"></span><span class="fids-clock"></span>' +
+        '<span class="fids-btns"><button type="button" data-fm="dep"></button><button type="button" data-fm="arr"></button><button type="button" class="x" aria-label="Close">×</button></span></div>' +
+        '<div class="fids-cols"></div><div class="flip"></div><div class="fids-foot"></div>';
+      document.body.appendChild(ov);
+      $$("[data-fm]", ov).forEach(function (b) { b.addEventListener("click", function (e) { e.stopPropagation(); fidsMode = b.getAttribute("data-fm"); ov._auto = false; $(".flip", ov)._prev = null; fids(ov._S, ov._W); }); });
+      var close = function () {
+        if (document.fullscreenElement) document.exitFullscreen();
+        ov.classList.remove("on"); document.body.classList.remove("fids-on");
+        if (location.hash === "#fids") try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+      };
+      $(".x", ov).addEventListener("click", function (e) { e.stopPropagation(); close(); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape" && ov.classList.contains("on")) close(); });
+      document.addEventListener("fullscreenchange", function () { if (!document.fullscreenElement && ov.classList.contains("on") && ov._fs) { ov._fs = false; close(); } });
+      setInterval(function () { var c = $(".fids-clock", ov), d = iradNow(); if (c) c.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds()); }, 1000);
+      ov._auto = true;
+    }
+    ov._S = S; ov._W = W;
+    if (!ov.classList.contains("on")) return;
+    var dep = fidsMode === "dep", today = iradToday(), tom = addDays(today, 1), nd = iradNow(), now = nd.getHours() * 60 + nd.getMinutes(), memo = {}, rows = [];
+    [[today, true], [tom, false]].forEach(function (dd) {
+      S.flights.filter(function (f) { return (dep ? f.from === "TLS" : f.to === "TLS") && runs(f, dd[0], S); })
+        .sort(function (a, b) { return m(dep ? a.dep : a.arr) - m(dep ? b.dep : b.arr); })
+        .forEach(function (f) {
+          var st = flightState(f, dd[0], S, W, memo), at = m(dep ? f.dep : f.arr) + st.min;
+          if (dd[1] && now > at + 30) return;
+          var r = fidsRem(f, st, now, dd[1], dep, S);
+          rows.push({ cls: r[1], cells: [dep ? f.dep : f.arr, f.no, apName(S, dep ? f.to : f.from), dd[1] && st.min && !st.cancel && !st.postponed ? hm(at) : "", r[0]] });
+        });
+    });
+    rows = rows.slice(0, 8);
+    while (rows.length < 8) rows.push({ cells: ["", "", "", "", ""] });
+    var WD = [5, 8, 12, 5, 18];
+    $(".fids-name", ov).textContent = apName(S, "TLS").toUpperCase() + " · " + t(dep ? "tabDep" : "tabArr").toUpperCase();
+    $$("[data-fm]", ov).forEach(function (b) { var md = b.getAttribute("data-fm"); b.textContent = t(md === "dep" ? "tabDep" : "tabArr"); b.setAttribute("aria-pressed", md === fidsMode ? "true" : "false"); });
+    $(".fids-cols", ov).innerHTML = ["hTime", "hFlight", dep ? "hTo" : "hFrom", "hExp", "hStatus"].map(function (k, j) {
+      return '<span style="width:calc(' + WD[j] + ' * 1.05em + ' + (WD[j] - 1) + 'px)"><i>' + esc(t(k)) + "</i></span>";
+    }).join("");
+    var fl = $(".flip", ov); fl.innerHTML = flipRows(fl, rows, WD);
+    var inc = airInc(W, today).filter(function (x) { return x.lines && x.lines.air && (!x.end || Date.parse(x.end) > Date.now()); })[0];
+    $(".fids-foot", ov).textContent = inc ? "⚠ " + tri(inc.lines.air) : t("fFoot");
+  }
+  function fidsOpen(S, W, fs) {
+    fids(S, W);
+    var ov = $("#fids"); ov.classList.add("on"); document.body.classList.add("fids-on");
+    $(".flip", ov)._prev = null; fids(S, W);
+    if (fs && ov.requestFullscreen) { var p = ov.requestFullscreen(); ov._fs = true; if (p && p.catch) p.catch(function () { ov._fs = false; }); }
+    if (!fidsTimer) fidsTimer = setInterval(function () {
+      var o = $("#fids"); if (!o || !o.classList.contains("on")) return;
+      if (o._auto) { o._tick = (o._tick || 0) + 1; if (o._tick % 2 === 0) fidsMode = fidsMode === "dep" ? "arr" : "dep"; }
+      fids(o._S, o._W);
+    }, 15000);
+  }
   var boardMode = "dep";
   function board(S, W) {
     var el = $("#board"); if (!el) return;
@@ -266,7 +359,7 @@
       '<tr class="none"><td colspan="8">' + esc(t(dep ? "noDep" : "noArr")) + "</td></tr>";
     el.innerHTML = '<div class="tabs" role="tablist"><button type="button" role="tab" data-mode="dep" aria-selected="' + dep + '"><svg viewBox="0 0 24 24"><path d="M2.5 19h19v2h-19zm19.6-9.4c-.2-.8-1-1.3-1.8-1.1L14.9 10 8 3.6l-1.9.5 4.1 7.2-5 1.3-2-1.5-1.5.4 2.6 4.5 16.8-4.5c.8-.2 1.3-1.1 1-1.9z"/></svg>' + esc(t("tabDep")) +
       '</button><button type="button" role="tab" data-mode="arr" aria-selected="' + !dep + '"><svg viewBox="0 0 24 24"><path d="M2.5 19h19v2h-19zm7.2-5.2l4.3 1.2 5.3 1.4c.8.2 1.6-.3 1.8-1.1.2-.8-.3-1.6-1.1-1.8l-5.3-1.4-2.8-9.1-1.9-.5v8.3l-5-1.3-.9-2.3-1.5-.4v5.2z"/></svg>' + esc(t("tabArr")) +
-      '</button><span class="upd">' + esc(t("updated", { t: hm(now) })) + "</span></div>" +
+      '</button><button type="button" class="fids-btn">' + esc(t("fidsBtn")) + '</button><span class="upd">' + esc(t("updated", { t: hm(now) })) + "</span></div>" +
       (function () {   /* the incident behind the delays, once, dated */
         var seen = {};
         return [today, tom].map(function (d) {
@@ -277,6 +370,8 @@
       })() +
       '<div class="tbl-wrap"><table class="board">' + head + "<tbody>" + body + "</tbody></table></div>";
     $$("[data-mode]", el).forEach(function (bt) { bt.addEventListener("click", function () { boardMode = bt.getAttribute("data-mode"); board(S, W); }); });
+    $(".fids-btn", el).addEventListener("click", function () { fidsMode = boardMode; fidsOpen(S, W, true); });
+    fids(S, W);
   }
   function daysCell(f, S) {
     return '<span class="days">' + [1, 2, 3, 4, 5, 6, 7].map(function (i) { return '<span class="' + (f.days.indexOf(String(i)) >= 0 ? "on" : "") + '">' + i + "</span>"; }).join("") + "</span>";
@@ -311,7 +406,7 @@
     var wxP = todayData().catch(function () { return null; });
     getJSON("/data/flights.json").then(function (S) {
       schedule(S); nextTkm(S);
-      if ($("#board")) wxP.then(function (W) { board(S, W); });
+      if ($("#board")) wxP.then(function (W) { board(S, W); if (location.hash === "#fids" && !($("#fids") && $("#fids").classList.contains("on"))) fidsOpen(S, W, false); });
     }).catch(function () { failBox($("#board")); failBox($("#sched")); });
   }
 

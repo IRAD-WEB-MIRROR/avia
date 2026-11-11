@@ -219,3 +219,33 @@ ul.dash li { margin: 2px 0; }
   .board td.tm { font-size: 14px; }
   .tabs button { padding: 6px 10px; font-size: 12px; }
 }
+
+/* station mode (#fids): the board as a full-screen split-flap display */
+.tabs .fids-btn { margin-left: 6px; font: bold 12px var(--font); padding: 4px 10px; border: 1px solid #c76a00; border-radius: 3px; background: linear-gradient(#ffb347, #f08a00); color: #fff; cursor: pointer; }
+#fids { display: none; position: fixed; inset: 0; z-index: 10000; background: #07090c; color: var(--flap); font: bold 1.6vw/1 "Courier New", Courier, monospace; padding: 2.4vw 3vw; flex-direction: column; justify-content: center; }
+#fids.on { display: flex; }
+body.fids-on { overflow: hidden; }
+#fids .fids-head { display: flex; align-items: center; gap: 1vw; font: bold 2.2vw/1 var(--narrow); letter-spacing: .1em; color: #fff; margin-bottom: 1.4vw; }
+#fids .fids-head img { width: 3vw; height: 3vw; }
+#fids .fids-name { flex: 1; }
+#fids .fids-clock { color: var(--flap-yel); font-family: "Courier New", Courier, monospace; }
+#fids .fids-btns { display: flex; gap: 6px; }
+#fids .fids-btns button { font: bold 12px var(--font); background: #1d2229; color: #cdd5de; border: 1px solid #39424d; border-radius: 3px; padding: 3px 8px; cursor: pointer; }
+#fids .fids-btns button[aria-pressed="true"] { background: var(--orange); color: #fff; border-color: var(--orange-deep); }
+#fids .fids-btns .x { font-size: 16px; line-height: 1; }
+#fids .fids-cols, #fids .flip .fr { display: flex; gap: .9em; white-space: nowrap; }
+#fids .fids-cols { color: #8b96a3; padding-bottom: .4em; border-bottom: 1px solid #2a3038; margin-bottom: .3em; }
+#fids .fids-cols span { flex: none; }
+#fids .fids-cols i { font: bold .62em var(--font); font-style: normal; text-transform: uppercase; letter-spacing: 1px; }
+#fids .flip .fr { padding: .22em 0; }
+#fids .flip .fc { display: inline-flex; gap: 1px; flex: none; }
+#fids .flip .ch { display: inline-block; width: 1.05em; height: 1.4em; line-height: 1.4em; text-align: center; background: linear-gradient(#20252c 49%, #000 50%, #191d23 51%); border-radius: 2px; color: var(--flap); }
+#fids .flip .fr.warn .c4 .ch, #fids .flip .c3 .ch { color: var(--flap-yel); }
+#fids .flip .fr.bad .c4 .ch { color: #ff5a3c; }
+#fids .flip .fr.ok .c4 .ch, #fids .flip .fr.go .c4 .ch { color: #5be37a; }
+#fids .flip .fr.dim .ch { color: #7b848e; }
+#fids .flip .ch.fl { animation: fidsflip .32s ease-in both; }
+@keyframes fidsflip { 0% { transform: rotateX(90deg); color: transparent; } 60% { transform: rotateX(-20deg); } 100% { transform: rotateX(0); } }
+#fids .fids-foot { color: #8b96a3; font: 1.1vw/1.4 var(--font); margin-top: 1vw; padding-top: .8vw; border-top: 1px solid #2a3038; }
+@media (max-width: 700px) { #fids { font-size: 2.05vw; padding: 12px 8px; } #fids .fids-head { font-size: 15px; } #fids .fids-head img { width: 22px; height: 22px; } #fids .fids-foot { font-size: 11px; } }
+@media (prefers-reduced-motion: reduce) { #fids .flip .ch.fl { animation: none; } }
