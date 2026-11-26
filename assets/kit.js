@@ -197,9 +197,9 @@
    "kit_phone": "Tel.",
    "kit_board": "Zonanın bardık mamlekettik organdarının bosh orundarı Gubernatordun apparatının portalında da birge jarıyalanat:",
    "kit_nav": "Terminal",
-   "kh1": "Tüshtük perrondogu ishter, 3–7-noyabr",
-   "kh2": "Kıshkı raspisaniye küchünö kirdi",
-   "kh3": "Janyl mayramına Tash-Kömürgö koshumcha reysler"
+   "kh1": "Talas aeroportunda orun bar",
+   "kh2": "Tüshtük perrondogu ishter, 3–7-noyabr",
+   "kh3": "Kıshkı raspisaniye küchünö kirdi"
   },
   "ru": {
    "kit_home": "Главная",
@@ -248,9 +248,9 @@
    "kit_phone": "Тел.",
    "kit_board": "Вакансии всех государственных органов Зоны также публикуются вместе на портале Аппарата губернатора:",
    "kit_nav": "Терминал",
-   "kh1": "Работы на южном перроне 3–7 ноября",
-   "kh2": "Вступило в силу зимнее расписание",
-   "kh3": "Дополнительные рейсы в Таш-Кумыр к празднику Святой Джаныл"
+   "kh1": "Гражданский терминал Таласа готов принимать больше рейсов",
+   "kh2": "Работы на южном перроне 3–7 ноября",
+   "kh3": "Вступило в силу зимнее расписание"
   }
  }
 });
