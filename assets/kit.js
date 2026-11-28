@@ -197,9 +197,9 @@
    "kit_phone": "Tel.",
    "kit_board": "Zonanın bardık mamlekettik organdarının bosh orundarı Gubernatordun apparatının portalında da birge jarıyalanat:",
    "kit_nav": "Terminal",
-   "kh1": "Talas aeroportunda orun bar",
-   "kh2": "Tüshtük perrondogu ishter, 3–7-noyabr",
-   "kh3": "Kıshkı raspisaniye küchünö kirdi"
+   "kh1": "Iradiya koshumcha E190 uchagyn aldy; kyshky jadybal özgörböyt",
+   "kh2": "Talas aeroportunda orun bar",
+   "kh3": "Tüshtük perrondogu ishter, 3–7-noyabr"
   },
   "ru": {
    "kit_home": "Главная",
@@ -248,9 +248,9 @@
    "kit_phone": "Тел.",
    "kit_board": "Вакансии всех государственных органов Зоны также публикуются вместе на портале Аппарата губернатора:",
    "kit_nav": "Терминал",
-   "kh1": "Гражданский терминал Таласа готов принимать больше рейсов",
-   "kh2": "Работы на южном перроне 3–7 ноября",
-   "kh3": "Вступило в силу зимнее расписание"
+   "kh1": "«Ирадия» получила дополнительный Embraer E190; зимнее расписание не меняется",
+   "kh2": "Гражданский терминал Таласа готов принимать больше рейсов",
+   "kh3": "Работы на южном перроне 3–7 ноября"
   }
  }
 });
